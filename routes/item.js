@@ -1,6 +1,11 @@
 const router = require('express').Router();
 const itemSchema = require('../models/itemSchema');
-router.post('/add', (req, res) => {
-  res.send('item to register');
+const isSeller = require('../isSeller');
+
+router.post('/add', isSeller, (req, res) => {
+  itemSchema
+    .create(Object.assign({ sellerId: req.user.userId }, req.body))
+    .then(item => res.json(item))
+    .catch(err => console.log(err));
 });
 module.exports = router;
