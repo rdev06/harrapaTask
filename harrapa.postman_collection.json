@@ -1,0 +1,344 @@
+{
+	"info": {
+		"_postman_id": "980a4886-c461-406b-9ff0-25fa263c12e2",
+		"name": "harrapa",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "rdev.dev63@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "seller",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "pass123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{harrapa_api}}/api/user/register",
+							"host": [
+								"{{harrapa_api}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"register"
+							]
+						},
+						"description": "to register user\nmark true if he is seller else false(optional)"
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "rdev.dev06@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "pass123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{harrapa_api}}/api/user/login",
+							"host": [
+								"{{harrapa_api}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"login"
+							]
+						},
+						"description": "to register user\nmark true if he is seller else false(optional)"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "item",
+			"item": [
+				{
+					"name": "add item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{harappaLoginTokenS}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"item2\",\n    \"price\": 22,\n    \"moreInfo\": \"info2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{harrapa_api}}/api/item/add",
+							"host": [
+								"{{harrapa_api}}"
+							],
+							"path": [
+								"api",
+								"item",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "general",
+			"item": [
+				{
+					"name": "get items",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{harrapa_api}}/api/general/items",
+							"host": [
+								"{{harrapa_api}}"
+							],
+							"path": [
+								"api",
+								"general",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "seller items",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{harrapa_api}}/api/general/sellerItems/:sellerId",
+							"host": [
+								"{{harrapa_api}}"
+							],
+							"path": [
+								"api",
+								"general",
+								"sellerItems",
+								":sellerId"
+							],
+							"variable": [
+								{
+									"key": "sellerId",
+									"value": "5eb170fdb5b3871bc95dfe62"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "get order status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{harappaLoginTokenS}}"
+							}
+						],
+						"url": {
+							"raw": "{{harrapa_api}}/api/order/?showSeller=true&status=accepted",
+							"host": [
+								"{{harrapa_api}}"
+							],
+							"path": [
+								"api",
+								"order",
+								""
+							],
+							"query": [
+								{
+									"key": "showSeller",
+									"value": "true"
+								},
+								{
+									"key": "status",
+									"value": "accepted"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add To Cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{harappaLoginTokenU}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "itemId",
+									"value": "5eb1875570e1f72915532b7c",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{harrapa_api}}/api/order/addToCart",
+							"host": [
+								"{{harrapa_api}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"addToCart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{harappaLoginTokenS}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"items\": [{\n    \t\"itemId\":\"5eb1875570e1f72915532b7c\",\n    \t\"quantity\":2\n    },{\n    \t\"itemId\":\"5eb177fab83f7b2101f3afa0\",\n    \t\"quantity\":34\n    }]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{harrapa_api}}/api/order/make",
+							"host": [
+								"{{harrapa_api}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"make"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update status by seller",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{harappaLoginTokenS}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "status",
+									"value": "dispatched",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{harrapa_api}}/api/order/changeStatus/:orderId",
+							"host": [
+								"{{harrapa_api}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"changeStatus",
+								":orderId"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "5eb19782052fe730c8b4e20b"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

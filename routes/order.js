@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
+const isSeller = require('../isSeller');
 const itemSchema = require('../models/itemSchema');
 const orderSchema = require('../models/orderSchema');
 
@@ -64,5 +65,20 @@ router.post('/make', (req, res) => {
 });
 
 //-------------------seller-----------portion-------------------------------
+
+router.post('/changeStatus/:orderId', isSeller, (req, res) => {
+  //update order if orderId must belongs to this seller
+  orderSchema
+    .findOneAndUpdate(
+      {
+        _id: mongoose.Types.ObjectId(req.params.orderId),
+        sellerId: mongoose.Types.ObjectId(req.user.userId)
+      },
+      { $set: req.body },
+      { new: true }
+    )
+    .then(order => res.json(order))
+    .catch(err => console.log(err));
+});
 
 module.exports = router;

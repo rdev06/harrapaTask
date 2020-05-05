@@ -1,13 +1,13 @@
 {
   "name": "haraapa",
   "version": "1.0.0",
-  "description": "",
+  "description": "this is task given by harrapa",
   "main": "index.js",
   "scripts": {
     "start": "node index"
   },
   "keywords": [],
-  "author": "",
+  "author": "Roshan Dev",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
