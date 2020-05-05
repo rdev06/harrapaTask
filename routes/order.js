@@ -1,6 +1,17 @@
 const router = require('express').Router();
+const mongoose = require('mongoose');
 const itemSchema = require('../models/itemSchema');
 const orderSchema = require('../models/orderSchema');
+
+router.get('/', (req, res) => {
+  let whereCondition = { buyerId: mongoose.Types.ObjectId(req.user.userId) };
+  req.query.status ? (whereCondition['status'] = req.query.status) : '';
+  orderSchema
+    .find(whereCondition)
+    .populate('itemId', 'name price')
+    .then(order => res.json(order))
+    .catch(err => console.log(err));
+});
 
 router.post('/addToCart', (req, res) =>
   itemSchema
