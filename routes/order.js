@@ -4,7 +4,10 @@ const itemSchema = require('../models/itemSchema');
 const orderSchema = require('../models/orderSchema');
 
 router.get('/', (req, res) => {
-  let whereCondition = { buyerId: mongoose.Types.ObjectId(req.user.userId) };
+  let whereCondition =
+    req.query.showSeller == 'true'
+      ? { sellerId: mongoose.Types.ObjectId(req.user.userId) }
+      : { buyerId: mongoose.Types.ObjectId(req.user.userId) };
   req.query.status ? (whereCondition['status'] = req.query.status) : '';
   orderSchema
     .find(whereCondition)
@@ -59,5 +62,7 @@ router.post('/make', (req, res) => {
 
     .catch(err => console.log(err));
 });
+
+//-------------------seller-----------portion-------------------------------
 
 module.exports = router;
