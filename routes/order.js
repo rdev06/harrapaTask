@@ -2,17 +2,6 @@ const router = require('express').Router();
 const itemSchema = require('../models/itemSchema');
 const orderSchema = require('../models/orderSchema');
 
-/* router.post('/make', (req, res) => {
-  //fetch data for items asynchromously
-  Promise.all(
-    req.body.items.map(item =>
-      itemSchema.findById(item.itemId).select('sellerId name -_id').exec()
-    )
-  ).then(items => {
-      item
-  });
-}); */
-
 router.post('/addToCart', (req, res) =>
   itemSchema
     .findById(req.body.itemId)
@@ -36,28 +25,28 @@ router.post('/addToCart', (req, res) =>
     .catch(err => console.log(err))
 );
 
-module.exports = router;
-
-/*   itemSchema
-    .findById(req.body.itemId)
-    .select('sellerId -_id')
-    .exec()
-        .then(item => {
-        if (item.sellerId == req.user.userId) {
-            res.json({msg:'You can not add this item as '})
-        } else {
-            orderSchema.create(
-                Object.assign(
-                  {
-                    sellerId: item.sellerId,
-                    buyerId: req.user.userId
-                  },
-                  req.body
-                )
-              )
+router.post('/make', (req, res) => {
+  //fetch data for items asynchromously
+  Promise.all(
+    req.body.items.map(item =>
+      itemSchema.findById(item.itemId).select('sellerId -_id').lean().exec()
+    )
+  )
+    .then(itemSellers =>
+      //create orders all in one go asynchronously
+      Promise.all(
+        req.body.items.map((item, i) =>
+          orderSchema.create(
+            Object.assign(
+              { buyerId: req.user.userId },
+              Object.assign(itemSellers[i], item)
             )
-            .then(order => res.json(order)
-        }
-    }
-      )
-    .catch(err => console.log(err)) */
+          )
+        )
+      ).then(orders => res.json(orders))
+    )
+
+    .catch(err => console.log(err));
+});
+
+module.exports = router;

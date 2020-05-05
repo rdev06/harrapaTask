@@ -2,10 +2,22 @@ const mongoose = require('mongoose');
 //for defining schema
 let orderSchema = mongoose.Schema(
   {
-    sellerId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
-    itemId: { type: mongoose.Schema.Types.ObjectId, ref: 'item' },
-    buyerId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
-    quantity: { type: Number },
+    sellerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user',
+      required: true
+    },
+    itemId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'item',
+      required: true
+    },
+    buyerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user',
+      required: true
+    },
+    quantity: { type: Number, default: 1, required: true },
     status: {
       type: String,
       enum: ['pending', 'accepted', 'rejected', 'dispatched'],
