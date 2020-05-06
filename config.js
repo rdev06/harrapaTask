@@ -11,7 +11,15 @@ const config = {
   //-----------------
   jwt_secrect_key: 'i love coding',
   jwt_expiresIn: '30d',
-  bcryptGenSaltLength: 10
+  bcryptGenSaltLength: 10,
+  //----------------Mail---------------
+  mailConfig: {
+    service: 'gmail',
+    auth: {
+      user: 'GAMIL_USER_MAIL_ID',
+      pass: 'GMAIL_USER_PASSWORD'
+    }
+  }
 };
 const development = {
   mongodb: 'mongodb://localhost:27017/harrapa',

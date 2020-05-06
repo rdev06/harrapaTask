@@ -1,20 +1,31 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
+const config = require('../config');
+const sendMail = require('../helpers/sendMail');
 const isSeller = require('../isSeller');
 const itemSchema = require('../models/itemSchema');
 const orderSchema = require('../models/orderSchema');
+const userSchema = require('../models/userSchema');
 
-router.get('/', (req, res) => {
-  let whereCondition =
-    req.query.showSeller == 'true'
-      ? { sellerId: mongoose.Types.ObjectId(req.user.userId) }
-      : { buyerId: mongoose.Types.ObjectId(req.user.userId) };
-  req.query.status ? (whereCondition['status'] = req.query.status) : '';
-  orderSchema
-    .find(whereCondition)
-    .populate('itemId', 'name price')
-    .then(order => res.json(order))
-    .catch(err => console.log(err));
+router.get('/:orderId?', (req, res) => {
+  if (req.params.orderId) {
+    orderSchema
+      .findById(req.params.orderId)
+      .populate('itemId', 'name price')
+      .then(item => res.json(item))
+      .catch(err => console.log(err));
+  } else {
+    let whereCondition =
+      req.query.showSeller == 'true'
+        ? { sellerId: mongoose.Types.ObjectId(req.user.userId) }
+        : { buyerId: mongoose.Types.ObjectId(req.user.userId) };
+    req.query.status ? (whereCondition['status'] = req.query.status) : '';
+    orderSchema
+      .find(whereCondition)
+      .populate('itemId', 'name price')
+      .then(order => res.json(order))
+      .catch(err => console.log(err));
+  }
 });
 
 router.post('/addToCart', (req, res) =>
@@ -58,7 +69,26 @@ router.post('/make', (req, res) => {
             )
           )
         )
-      ).then(orders => res.json(orders))
+      ).then(orders => {
+        res.json(orders);
+        // notifing later on so that process will complete in frontend
+        //Using forEach because might be google gmail will reject sending mail at the same time
+        orders.forEach(order =>
+          userSchema
+            .findById(order.sellerId)
+            .select('email')
+            .then(seller =>
+              sendMail({
+                from: 'Harrapa',
+                to: seller.email,
+                subject: 'You have new order',
+                text: `To review your product click on this link http://119.81.0.42:${config.port}/api/order/${order._id}`,
+                onError: e => console.log(e),
+                onSuccess: i => console.log(i)
+              })
+            )
+        );
+      })
     )
 
     .catch(err => console.log(err));
@@ -77,7 +107,24 @@ router.post('/changeStatus/:orderId', isSeller, (req, res) => {
       { $set: req.body },
       { new: true }
     )
-    .then(order => res.json(order))
+    .populate('itemId', 'name price')
+    .then(order => {
+      res.json(order);
+      //Make buyer notify about status change
+      userSchema
+        .findById(order.buyerId)
+        .select('email')
+        .then(user =>
+          sendMail({
+            from: 'Harrapa',
+            to: user.email,
+            subject: `Status of you order: ${order.itemId.name} is changed to ${order.status}`,
+            text: `To review your product click on this link http://119.81.0.42:${config.port}/api/order/${order._id}`,
+            onError: e => console.log(e),
+            onSuccess: i => console.log(i)
+          })
+        );
+    })
     .catch(err => console.log(err));
 });
 
