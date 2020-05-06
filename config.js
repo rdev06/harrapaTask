@@ -10,7 +10,8 @@ const config = {
   apiKey: 'roshanKey',
   //-----------------
   jwt_secrect_key: 'i love coding',
-  jwt_expiresIn: '30d'
+  jwt_expiresIn: '30d',
+  bcryptGenSaltLength: 10
 };
 const development = {
   mongodb: 'mongodb://localhost:27017/harrapa',
