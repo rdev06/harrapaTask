@@ -22,8 +22,7 @@ const config = {
   }
 };
 const development = {
-  mongodb: 'mongodb://localhost:27017/harrapa',
-  port: 5003
+  mongodb: 'mongodb://harrapa:password123@localhost:27017/harrapa'
 };
 const production = {
   mongodb: 'mongodb://harrapa:password123@localhost:27017/harrapa'
